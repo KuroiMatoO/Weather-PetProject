@@ -1,0 +1,203 @@
+/* icons */
+/* 
+https://i.imgur.com/jmYdUdr.png - night
+https://i.imgur.com/WtfWTIa.png - night cloudy
+https://i.imgur.com/AvtBecH.png - night rain
+https://i.imgur.com/zK186jI.png - night snow
+https://i.imgur.com/2FdRiXW.png - day
+https://i.imgur.com/WrPw9Qk.png - day cloudy
+https://i.imgur.com/WlBSwvc.png - day rain
+https://i.imgur.com/C7Wt6ol.png - day snow
+*/
+body{
+  overflow: hidden;
+}
+#weather_report{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 98vh;
+  width: 98.6vw;
+  font-family: sans-serif;
+  /*   background: red; */
+}
+#wrapper{
+  width: 95vw;
+  height: 90vh;
+  background:skyblue;
+  display: flex;
+  flex-flow: column;
+  justify-content: space-evenly;
+  align-items: center;
+  border-radius: 5px;
+}
+#current_date{
+  width: 95%;
+  height: 65%;
+  /* padding: 5px; */
+  /* background: red; */
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: center;
+  /* background: #fff; */
+}
+#main_data{
+  /* background: rgba(25, 25, 146, 0.322); */
+  width: 60%;
+  height: 40%;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+#secondary_data{
+  width: 40%;
+  height: 30%;
+  /* background: rgb(162, 175, 87); */
+  display: flex;
+  justify-content: space-evenly;
+  flex-flow: column;
+}
+#hourly_forecast{
+  width: 100%;
+  height: 60%;
+  /* background: rgba(39, 224, 32, 0.774); */
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+  align-items: center;
+  /* border: 1px solid black; */
+  /* border-radius: 10px; */
+}
+#main_data::after{
+content:'';
+width: 2px;
+height: 80%;
+background: rgba(0, 0, 0, 0.548);
+}
+.main_item{
+/*   width: 15%;
+  height: 70%; */
+  /* background: yellow; */
+  
+}
+/* #main_data:hover .main_item{
+  border: 1px solid red;
+} */
+#temperature{
+  width: 15%;
+  height: 60%;
+  font-size: 5vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#icon{
+  width: 15%;
+  height: 60%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#icon img{
+  width: 72px;
+  height: 72px;
+}
+#user_info{
+  width: 50%;
+  height: 60%;
+  display: flex;
+  flex-flow: column;
+  font-size: 2.3vw;
+  
+}
+#location{
+  height: 33.3%;
+  /* background: yellow; */
+}
+#date{
+  height: 33.3%;
+  /* background: yellowgreen; */
+}
+#time{
+  height: 33.4%;
+  /* background: darkgreen;   */
+}
+
+.secondary_item{
+  width: 100%;
+  height: 100%;
+  /* background: rgba(11, 42, 78, 0.438); */
+  font-size: 2vw;
+  font-family: sans-serif;
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.hour{
+  width: 5%;
+  height: 85%;
+  background: yellow;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-flow: column;
+}
+.hour img{
+  width: 32px;
+  height: 32px;
+}
+#weekly{
+  height: 25%;
+  width: 95%;
+  background: rgba(83, 83, 83, 0.151);
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 10px;
+}
+
+.day{
+  width: 12%;
+  height: 80%;
+  /* background: yellow; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-flow: column;
+}
+.day img{
+  width: 42px;
+  height: 42px;
+  margin: 5px 0;
+}
+
+#my-chart {
+  position: relative;
+  width: 100%;
+  height: 50%;
+  /* background-color: rgba(0, 255, 255, 0.158); */
+}
+#my-chart .area {
+  position: absolute;
+  /* --color: red; */
+  --color: linear-gradient(rgba(204, 32, 32, 0.466),rgba(255, 208, 0, 0.486), rgba(255, 208, 0, 0.123));
+}
+#my-chart .line{
+  position: absolute;
+  --color: rgba(0, 0, 0, 0.753);
+}
+#my-chart th{
+  right: -15%;
+}
+#my-chart span{
+  margin-bottom: 5px;
+} 
+#old_wrapper{
+  display: none;
+}

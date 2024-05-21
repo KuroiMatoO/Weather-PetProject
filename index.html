@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/charts.css/dist/charts.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vite App</title>
+</head>
+
+<body>
+  <div id='weather_report'>
+    <div id='wrapper'>
+      <div id='current_date'>
+        <div id='main_data'>
+          <div class='main_item' id='icon'><img src='https://i.imgur.com/WlBSwvc.png'></div>
+          <div class='main_item' id='temperature'>15°</div>
+          <div class='main_item' id='user_info'>
+            <div id='time'>14:32</div>
+            <div id='date'>May 8, Wednesday</div>
+            <div id='location'>Russia, Rostov-on-Don</div>
+          </div>
+        </div>
+        <div id='secondary_data'>
+          <div class='secondary_item' id='wind'>Wind: 4,1 m/s</div>
+          <div class='secondary_item' id='humidity'>Humidity: 73%</div>
+          <div class='secondary_item' id='pressure'>Pressure: 754 mm</div>
+        </div>
+        <div id='hourly_forecast'>
+          <div id="my-chart">
+
+            <table class="charts-css area show-labels labels-align-inline-end">
+              <caption> Line Example #1 </caption>
+              <tbody>
+                <tr>
+                  <th scope="row"> 13:00 </th>
+                  <td style="--start: calc(12/30); --end: calc(14/30);"><span class="data"> +14° </span></td>
+                </tr>
+                <tr>
+                  <th scope="row"> 14:00 </th>
+                  <td style="--start: calc(14/30); --end: calc(15/30);"><span class="data"> +15° </span></td>
+                </tr>
+                <tr>
+                  <th scope="row"> 15:00 </th>
+                  <td style="--start: calc(15/30); --end: calc(17/30);"><span class="data"> +17° </span></td>
+                </tr>
+                <tr>
+                  <th scope="row"> 16:00 </th>
+                  <td style="--start: calc(17/30); --end: calc(19/30);"><span class="data"> +19° </span></td>
+                </tr>
+                <tr>
+                  <th scope="row"> 17:00 </th>
+                  <td style="--start: calc(19/30); --end: calc(21/30);"><span class="data"> +21° </span></td>
+                </tr>
+                <tr>
+                  <th scope="row"> 18:00 </th>
+                  <td style="--start: calc(21/30); --end: calc(20/30);"><span class="data"> +20° </span></td>
+                </tr>
+                <tr>
+                  <th scope="row"> 19:00 </th>
+                  <td style="--start: calc(20/30); --end: calc(21/30);"><span class="data"> +21° </span></td>
+                </tr>
+                <tr>
+                  <th scope="row"> 20:00 </th>
+                  <td style="--start: calc(21/30); --end: calc(16/30);"><span class="data"> +16° </span></td>
+                </tr>
+                <tr>
+                  <th scope="row"> 21:00 </th>
+                  <td style="--start: calc(16/30); --end: calc(14/30);"><span class="data"> +14° </span></td>
+                </tr>
+                <tr>
+                  <td style="--start: calc(14/30); --end: calc(12/30);"><span class="data"></span></td>
+                </tr>
+              </tbody>
+
+            </table>
+            <table class="charts-css line show-labels">
+              <caption> Line Example #1 </caption>
+              <tbody>
+                <tr>
+                  <td style="--start: calc(12/30); --end: calc(14/30);"><span class="data"></span></td>
+                </tr>
+                <tr>
+                  <td style="--start: calc(14/30); --end: calc(15/30);"><span class="data"></span></td>
+                </tr>
+                <tr>
+                  <td style="--start: calc(15/30); --end: calc(17/30);"><span class="data"></span></td>
+                </tr>
+                <tr>
+                  <td style="--start: calc(17/30); --end: calc(19/30);"><span class="data"></span></td>
+                </tr>
+                <tr>
+                  <td style="--start: calc(19/30); --end: calc(21/30);"><span class="data"></span></td>
+                </tr>
+                <tr>
+                  <td style="--start: calc(21/30); --end: calc(20/30);"><span class="data"></span></td>
+                </tr>
+                <tr>
+                  <td style="--start: calc(20/30); --end: calc(21/30);"><span class="data"></span></td>
+                </tr>
+                <tr>
+                  <td style="--start: calc(21/30); --end: calc(16/30);"><span class="data"></span></td>
+                </tr>
+                <tr>
+                  <td style="--start: calc(16/30); --end: calc(14/30);"><span class="data"></span></td>
+                </tr>
+                <tr>
+                  <td style="--start: calc(14/30); --end: calc(12/30);"><span class="data"></span></td>
+                </tr>
+              </tbody>
+
+            </table>
+          </div>
+
+          <div id='old_wrapper'>
+            <div class='hour'>
+              <span>10:00</span>
+              <img src='https://i.imgur.com/WrPw9Qk.png'>
+              <span>+11°</span>
+            </div>
+            <div class='hour'>
+              <span>11:00</span>
+              <img src='https://i.imgur.com/WrPw9Qk.png'>
+              <span>+12°</span>
+            </div>
+            <div class='hour'>
+              <span>12:00</span>
+              <img src='https://i.imgur.com/WrPw9Qk.png'>
+              <span>+12°</span>
+            </div>
+            <div class='hour'>
+              <span>13:00</span>
+              <img src='https://i.imgur.com/WlBSwvc.png'>
+              <span>+14°</span>
+            </div>
+            <div class='hour'>
+              <span>14:00</span>
+              <img src='https://i.imgur.com/WlBSwvc.png'>
+              <span>+15°</span>
+            </div>
+            <div class='hour'>
+              <span>15:00</span>
+              <img src='https://i.imgur.com/WlBSwvc.png'>
+              <span>+16°</span>
+            </div>
+            <div class='hour'>
+              <span>16:00</span>
+              <img src='https://i.imgur.com/WlBSwvc.png'>
+              <span>+16°</span>
+            </div>
+            <div class='hour'>
+              <span>17:00</span>
+              <img src='https://i.imgur.com/WlBSwvc.png'>
+              <span>+16°</span>
+            </div>
+            <div class='hour'>
+              <span>18:00</span>
+              <img src='https://i.imgur.com/WrPw9Qk.png'>
+              <span>+14°</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='weekly'>
+        <div class='day' id='yesterday'>
+          <span class='daily_date'>Yesterday</span>
+          <img src='https://i.imgur.com/WrPw9Qk.png'>
+          <span class="daily_temp">+16°</span>
+        </div>
+        <div class='day' id='today'>
+          <span class='daily_date'>Today</span>
+          <img src='https://i.imgur.com/WlBSwvc.png'>
+          <span class="daily_temp">+15°</span>
+        </div>
+        <div class='day'>
+          <span class='daily_date'>May 9</span>
+          <img src='https://i.imgur.com/WrPw9Qk.png'>
+          <span class="daily_temp">+16°</span>
+        </div>
+        <div class='day'>
+          <span class='daily_date'>May 10</span>
+          <img src='https://i.imgur.com/WlBSwvc.png'>
+          <span class="daily_temp">+13°</span>
+        </div>
+        <div class='day'>
+          <span class='daily_date'>May 11</span>
+          <img src='https://i.imgur.com/WrPw9Qk.png'>
+          <span class="daily_temp">+16°</span>
+        </div>
+        <div class='day'>
+          <span class='daily_date'>May 12</span>
+          <img src='https://i.imgur.com/2FdRiXW.png'>
+          <span class="daily_temp">+18°</span>
+        </div>
+        <div class='day'>
+          <span class='daily_date'>May 13</span>
+          <img src='https://i.imgur.com/2FdRiXW.png'>
+          <span class="daily_temp">+19°</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div style="width: 900px; height: 300px;"><canvas id="weather_chart"></canvas></div> -->
+
+  <script type="module" src="/main.js"></script>
+</body>
+
+</html>
