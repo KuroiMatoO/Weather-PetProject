@@ -10,8 +10,115 @@
 </head>
 
 <body>
+  <div id="debug">
+    <div id="variables"></div>
+    <div id="local_storage"></div>
+  </div>
+
   <div id='weather_report'>
     <div id='wrapper'>
+      <button id="change_location_btn" title="Choose location">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+          <path
+            d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z">
+          </path>
+        </svg>
+      </button>
+      <div id='dark_background'></div>
+      <div class='location'>
+        <span id='location_header'>Search Locations<button></button></span>
+        <div id='location_body'>
+          <div id='location_search'>
+            <input type='search'>
+            <button id = 'detect_location' title="Detect Location via GPS">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+                <path
+                  d="M14.082 2.182a.5.5 0 0 1 .103.557L8.528 15.467a.5.5 0 0 1-.917-.007L5.57 10.694.803 8.652a.5.5 0 0 1-.006-.916l12.728-5.657a.5.5 0 0 1 .556.103zM2.25 8.184l3.897 1.67a.5.5 0 0 1 .262.263l1.67 3.897L12.743 3.52 2.25 8.184z">
+                </path>
+              </svg>
+            </button>
+          </div>
+          <div id='location_list'>
+            <div class='tip'><span>Start typing to search for locations</span></div>
+            <div class='favorite_locations'>
+              <div class='favorite_item'>
+                <span class='city'><span class='flag'><img src='https://open-meteo.com/images/country-flags/gb.svg'></span>London</span>
+                <span class='country'>England</span>
+                <span class='remove_favorite'>
+                  <button>
+                    <img src="https://img.icons8.com/pastel-glyph/64/trash.png">
+                  </button>
+                </span>
+              </div>
+              <div class='favorite_item'>
+                <span class='city'><span class='flag'><img src='https://open-meteo.com/images/country-flags/gb.svg'></span>London</span>
+                <span class='country'>England</span>
+                <span class='remove_favorite'>
+                  <button>
+                    <img src="https://img.icons8.com/pastel-glyph/64/trash.png">
+                  </button>
+                </span>
+              </div>
+              <div class='favorite_item'>
+                <span class='city'><span class='flag'><img src='https://open-meteo.com/images/country-flags/gb.svg'></span>London</span>
+                <span class='country'>England</span>
+                <span class='remove_favorite'>
+                  <button>
+                    <img src="https://img.icons8.com/pastel-glyph/64/trash.png">
+                  </button>
+                </span>
+              </div>
+            </div>
+            <div class='search_result'>
+              <div class="result_item">
+                <span class='city'><span class='flag'><img src='https://open-meteo.com/images/country-flags/gb.svg'></span>London</span>
+                <span class='country'>England</span>
+                <span class='add_favorite'>
+                  <button>
+                    <img src="https://img.icons8.com/ios/50/star--v1.png">
+                  </button>
+                </span>
+              </div>
+              <div class="result_item">
+                <span class='city'><span class='flag'><img src='https://open-meteo.com/images/country-flags/gb.svg'></span>London</span>
+                <span class='country'>England</span>
+                <span class='add_favorite'>
+                  <button>
+                    <img src="https://img.icons8.com/ios/50/star--v1.png">
+                  </button>
+                </span>
+              </div>
+              <div class="result_item">
+                <span class='city'><span class='flag'><img src='https://open-meteo.com/images/country-flags/gb.svg'></span>London</span>
+                <span class='country'>England</span>
+                <span class='add_favorite'>
+                  <button>
+                    <img src="https://img.icons8.com/ios/50/star--v1.png">
+                  </button>
+                </span>
+              </div>
+              <div class="result_item">
+                <span class='city'><span class='flag'><img src='https://open-meteo.com/images/country-flags/gb.svg'></span>London</span>
+                <span class='country'>England</span>
+                <span class='add_favorite'>
+                  <button>
+                    <img src="https://img.icons8.com/ios/50/star--v1.png">
+                  </button>
+                </span>
+              </div>
+              <div class="result_item">
+                <span class='city'><span class='flag'><img src='https://open-meteo.com/images/country-flags/gb.svg'></span>London</span>
+                <span class='country'>England</span>
+                <span class='add_favorite'>
+                  <button>
+                    <img src="https://img.icons8.com/ios/50/star--v1.png">
+                  </button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div id='current_date'>
         <div id='main_data'>
           <div class='main_item' id='icon'><img src='https://i.imgur.com/WlBSwvc.png'></div>
@@ -201,9 +308,6 @@
       </div>
     </div>
   </div>
-
-  <!-- <div style="width: 900px; height: 300px;"><canvas id="weather_chart"></canvas></div> -->
-
   <script type="module" src="/main.js"></script>
 </body>
 
