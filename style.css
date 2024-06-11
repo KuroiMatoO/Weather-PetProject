@@ -96,7 +96,7 @@ background: #d6d6d6;
   height: 100vh;
   background: #0000007a;
   z-index:5;
-  /* display: none; */
+  display: none;
 }
 .location{
   position: fixed;
