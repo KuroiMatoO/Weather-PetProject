@@ -151,6 +151,7 @@ async function Update_UI() {
 let lat;
 let lng;
 
+Loader()
 Update_UI();
 
 
@@ -189,6 +190,8 @@ let removeFavotite = document.querySelectorAll('.remove_favorite');
 let localLength = localStorage.length;
 let retrievedFavLocalString;
 let retrievedFavLocal
+
+let detectLocation = document.querySelector('#detect_location')
 
 //FUNCTIONS
 function Location_Visibility(){
@@ -402,8 +405,31 @@ function Choose_Location(buttonIndex, event){
     }
     Fetch_Weather(lat,lng)
     Location_Visibility()
+    Loader();
     Update_UI()
 }
+
+function Detect_Location(){
+    lat = '';
+    lng = '';
+    Fetch_Weather(lat,lng)
+    Location_Visibility();
+    Loader();
+    Update_UI()
+}
+
+//LOADER
+function Loader(){
+    const loader = document.querySelector('.loader')
+    const loaderBg = document.querySelector('.loader_bg')
+    loader.className = 'loader';
+    loaderBg.className = 'loader_bg';
+    setTimeout(() => {
+        loader.className = 'loader hidden';
+        loaderBg.className = 'loader_bg hidden';
+    }, 1500);
+}
+
 
 //EXECUTION
 
@@ -412,6 +438,7 @@ changeLocationButton.addEventListener('click',() => {
     Debug_Fill()
     Location_Visibility();
 });
+
 closeLocationButton.addEventListener('click', Location_Visibility)
 bg.addEventListener('click', Location_Visibility)
 
@@ -448,17 +475,7 @@ searchResultItem.forEach((button, buttonIndex) => {
     });
 });
 
-
-
-let detectLocation = document.querySelector('#detect_location')
 detectLocation.addEventListener('click', Detect_Location)
-function Detect_Location(){
-    lat = '';
-    lng = '';
-    Fetch_Weather(lat,lng)
-    Location_Visibility()
-    Update_UI()
-}
 
 
 Update_Location_List();    
