@@ -47,17 +47,17 @@ async function Fetch_Location(lat,lng) {
 //weather
 async function Fetch_Weather(lat,lng) {
     
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,relative_humidity_2m,is_day,precipitation,rain,snowfall,cloud_cover,pressure_msl,wind_speed_10m&hourly=temperature_2m&daily=temperature_2m_max,sunshine_duration,temperature_2m_min,precipitation_sum,rain_sum,showers_sum,snowfall_sum&wind_speed_unit=ms&forecast_days=16`;
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,relative_humidity_2m,is_day,precipitation,rain,snowfall,cloud_cover,pressure_msl,wind_speed_10m&hourly=temperature_2m&daily=temperature_2m_max,sunshine_duration,temperature_2m_min,precipitation_sum,rain_sum,showers_sum,snowfall_sum&wind_speed_unit=ms&forecast_days=16&timezone=Europe%2FMoscow`;
     const response = await fetch(url);
     if (!response.ok) {
         throw new Error('Weather API request failed');
     }
     return response.json();
 }
+let locationData;
+let weatherData;
 async function Update_UI() {
     try {
-        let locationData;
-        let weatherData;
         if (lat && lng){
             locationData = await Fetch_Location(lat,lng);
             weatherData = await Fetch_Weather(lat, lng);
@@ -98,29 +98,96 @@ async function Update_UI() {
         let chartDrawLine = document.querySelectorAll('.line td');
         let now = new Date(); 
         let nowTime = now.getHours()
+        
+        let hourlyTemp = weatherData.hourly.temperature_2m
+        let hourlyTemp20h = []
+        let hourlyTemp20hSumm = 0;
+
+        // Collect 20 hours of temperature data starting from 'nowTime'
+        for (let i = 0; i < 20; i++){
+            hourlyTemp20h.push(hourlyTemp[nowTime + i])
+            hourlyTemp20hSumm = Math.round(hourlyTemp20hSumm + hourlyTemp20h[i])
+        }
+        console.log('hourlyTemp20h: ' + hourlyTemp20h)
+        let maxTemp = Math.max(...hourlyTemp20h)
+        let minTemp = Math.min(...hourlyTemp20h)
+        const bufferPercentage = 0.2;
+        const bufferRange = (maxTemp - minTemp) * bufferPercentage;
+        const adjustedMinTemp = minTemp - bufferRange;
+        const adjustedMaxTemp = maxTemp + bufferRange;
+        
+        function normalizeTemperature(temp) {
+            return (temp - adjustedMinTemp) / (adjustedMaxTemp - adjustedMinTemp);
+        }
+        //normalized temperature = (temp - minTemp) / (maxTemp - minTemp)
+        //normalized and adjusted = (hourlyTemp - adjustedMinTemp) / (adjustedMaxTemp - adjustedMinTemp)
+        
 
         for (let i = 0; i < 10; i++) {
-            if (i == 0){
-                // console.log('nowTime = ' + nowTime)
-                chartDrawArea[i].style.setProperty('--start', `calc(${weatherData.hourly.temperature_2m[nowTime - 2]}/45)`);
-                chartDrawArea[i].style.setProperty('--end', `calc(${weatherData.hourly.temperature_2m[nowTime]}/45)`);
-                chartDrawLine[i].style.setProperty('--start', `calc(${weatherData.hourly.temperature_2m[nowTime - 2]}/45)`);
-                chartDrawLine[i].style.setProperty('--end', `calc(${weatherData.hourly.temperature_2m[nowTime]}/45)`);
-                // console.log(weatherData.hourly.temperature_2m[nowTime - 1])
+            let startTemp
+            let endTemp
+            let normalizedStart
+            let normalizedEnd
+
+            if (i == 0) {
+                startTemp = hourlyTemp[nowTime - 2];
+                endTemp = hourlyTemp[nowTime];
+
+                normalizedStart = normalizeTemperature(startTemp);
+                normalizedEnd = normalizeTemperature(endTemp);
+                chartTempText[i].innerHTML = hourlyTemp[nowTime] + '°';
+
+                chartDrawArea[i].style.setProperty('--start', normalizedStart);
+                chartDrawArea[i].style.setProperty('--end', normalizedEnd);
+                chartDrawLine[i].style.setProperty('--start', normalizedStart);
+                chartDrawLine[i].style.setProperty('--end', normalizedEnd);
+
+            } else {
+                startTemp = hourlyTemp[nowTime + i * 2];
+                endTemp = hourlyTemp[nowTime + (i + 1) * 2];
+
+                normalizedStart = normalizeTemperature(startTemp);
+                normalizedEnd = normalizeTemperature(endTemp);
+                chartDrawArea[i].style.setProperty('--start', normalizedStart);
+                chartDrawArea[i].style.setProperty('--end', normalizedEnd);
+                chartDrawLine[i].style.setProperty('--start', normalizedStart);
+                chartDrawLine[i].style.setProperty('--end', normalizedEnd);
+                // chartTempText[i].innerHTML = hourlyTemp[nowTime] + '°';
+
+                chartTempText[i].innerHTML = startTemp + '°';
             }
-            chartDrawArea[i].style.setProperty('--start', `calc(${weatherData.hourly.temperature_2m[nowTime]}/45)`);
-            chartDrawArea[i].style.setProperty('--end', `calc(${weatherData.hourly.temperature_2m[nowTime + 2]}/45)`);
-            chartDrawLine[i].style.setProperty('--start', `calc(${weatherData.hourly.temperature_2m[nowTime]}/45)`);
-            chartDrawLine[i].style.setProperty('--end', `calc(${weatherData.hourly.temperature_2m[nowTime + 2]}/45)`);
+
+
+
+
+            console.log('current temp: ' + hourlyTemp[nowTime])
+            console.log(`%c start: ${startTemp}`, 'color:#3cd737');
+            console.log(`%c end: ${endTemp}`, 'color:#be3016');
+
+            // if (i == 0) {
+            //     chartDrawArea[i].style.setProperty('--start', `calc(${hourlyTemp[nowTime - 2] - adjustedMinTemp}/${adjustedMaxTemp - adjustedMinTemp})`);
+            //     chartDrawArea[i].style.setProperty('--end', `calc(${hourlyTemp[nowTime] - adjustedMinTemp}/${adjustedMaxTemp - adjustedMinTemp})`);
+            //     chartDrawLine[i].style.setProperty('--start', `calc(${hourlyTemp[nowTime - 2] - adjustedMinTemp}/${adjustedMaxTemp - adjustedMinTemp})`);
+            //     chartDrawLine[i].style.setProperty('--end', `calc(${hourlyTemp[nowTime] - adjustedMinTemp}/${adjustedMaxTemp - adjustedMinTemp})`);
+            // }
+            // chartDrawArea[i].style.setProperty('--start', `calc(${hourlyTemp[nowTime] - adjustedMinTemp}/${adjustedMaxTemp - adjustedMinTemp})`);
+            // chartDrawArea[i].style.setProperty('--end', `calc(${hourlyTemp[nowTime + 2] - adjustedMinTemp}/${adjustedMaxTemp - adjustedMinTemp})`);
+            // chartDrawLine[i].style.setProperty('--start', `calc(${hourlyTemp[nowTime] - adjustedMinTemp}/${adjustedMaxTemp - adjustedMinTemp})`);
+            // chartDrawLine[i].style.setProperty('--end', `calc(${hourlyTemp[nowTime + 2] - adjustedMinTemp}/${adjustedMaxTemp - adjustedMinTemp})`);
+            // console.log('Time: ' + nowTime)
+            // console.log('%c start temp:' + hourlyTemp[nowTime], 'color: #bada55')
+            // console.log('%c end temp: ' + hourlyTemp[nowTime + 2], 'color: #ff3131')
+            // console.log(`--start calc(${hourlyTemp[nowTime] - adjustedMinTemp}/${adjustedMaxTemp - adjustedMinTemp}) = ` + (hourlyTemp[nowTime] - adjustedMinTemp)/(adjustedMaxTemp - adjustedMinTemp))
+            // console.log(`--end calc(${hourlyTemp[nowTime + 2] - adjustedMinTemp}/${adjustedMaxTemp - adjustedMinTemp}) = ` + (hourlyTemp[nowTime + 2] - adjustedMinTemp)/(adjustedMaxTemp - adjustedMinTemp))
             
-            if (i < 9){
-                chartTempText[i].innerHTML = Math.round(weatherData.hourly.temperature_2m[nowTime])+'°'
-                nowTime = nowTime + 2;
-            }
+            // if (i < 9) {
+            //     chartTempText[i].innerHTML = (hourlyTemp[nowTime]).toFixed(1) + '°'
+            //     nowTime = nowTime + 2;
+            // }
         }
         for (let i = 0; i < 9; i++) {
-            let nextHour = new Date(today); 
-            nextHour.setHours(today.getHours() + 2 * i); 
+            let nextHour = new Date(today);
+            nextHour.setHours(today.getHours() + 2 * i);
             chartTime[i].innerHTML = `${nextHour.getHours()}:00`;
         }
 
@@ -151,9 +218,9 @@ async function Update_UI() {
 let lat;
 let lng;
 
-Loader()
-Update_UI();
 
+Update_UI();
+Loader()
 
 
 //Choosing location manually
@@ -249,15 +316,28 @@ async function Update_Location_List() {
             let LSRLength= Object.keys(locationSearchResponse.results).length
 
             for (let i = 0; i < LSRLength && i < 5; i++) {
+                console.log(locationSearchResponse.results[i])
                 searchLocationData[`loc${i}`] = {
                     city: locationSearchResponse.results[i].name,
-                    country: locationSearchResponse.results[i].country,
                     latitude: locationSearchResponse.results[i].latitude,
                     longitude: locationSearchResponse.results[i].longitude,
-                    countryCode: locationSearchResponse.results[i].country_code.toLowerCase(),
                 }
+                if (locationSearchResponse.results[i].country){
+                    searchLocationData[`loc${i}`]["country"] = locationSearchResponse.results[i].country
+                } else {
+                    searchLocationData[`loc${i}`]["country"] = ''
+                }
+                if (locationSearchResponse.results[i].country_code){
+                    searchLocationData[`loc${i}`]["countryCode"] = locationSearchResponse.results[i].country_code.toLowerCase()
+                }                    
+
                 searchResultItemCountry[i].innerHTML = searchLocationData[`loc${i}`].country
-                searchResultItemIMG[i].src = `https://open-meteo.com/images/country-flags/${searchLocationData[`loc${i}`].countryCode}.svg`
+                if (locationSearchResponse.results[i].country_code){
+                    searchResultItemIMG[i].src = `https://open-meteo.com/images/country-flags/${searchLocationData[`loc${i}`].countryCode}.svg`
+                } else {
+                    searchResultItemIMG[i].src = 'https://open-meteo.com/images/country-flags/united_nations.svg'
+                }
+
                 let cityNameNode = searchResultItemCity[i].childNodes[searchResultItemCity[i].childNodes.length - 1];
                 cityNameNode.nodeValue = searchLocationData[`loc${i}`].city;
                 searchResultItem[i].style.display = 'flex';
@@ -405,8 +485,8 @@ function Choose_Location(buttonIndex, event){
     }
     Fetch_Weather(lat,lng)
     Location_Visibility()
-    Loader();
     Update_UI()
+    Loader();
 }
 
 function Detect_Location(){
@@ -414,20 +494,31 @@ function Detect_Location(){
     lng = '';
     Fetch_Weather(lat,lng)
     Location_Visibility();
-    Loader();
     Update_UI()
+    Loader();
 }
 
 //LOADER
-function Loader(){
-    const loader = document.querySelector('.loader')
-    const loaderBg = document.querySelector('.loader_bg')
-    loader.className = 'loader';
-    loaderBg.className = 'loader_bg';
-    setTimeout(() => {
-        loader.className = 'loader hidden';
-        loaderBg.className = 'loader_bg hidden';
-    }, 1500);
+async function Loader() {
+    try {
+        const loader = document.querySelector('.loader')
+        const loaderBg = document.querySelector('.loader_bg')
+        loader.className = 'loader';
+        loaderBg.className = 'loader_bg';
+        var timer = setInterval(checkCoords, 1000);
+        function checkCoords() {
+            if (locationData && weatherData) {
+                clearInterval(timer);
+                loader.className = 'loader hidden';
+                loaderBg.className = 'loader_bg hidden';
+            } else {
+                console.log('something wrong')
+            }
+        }
+    } catch (error) {
+        console.error(error);
+    }
+
 }
 
 
