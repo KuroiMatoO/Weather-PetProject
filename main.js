@@ -96,6 +96,7 @@ async function Update_UI() {
         let chartTempText = document.querySelectorAll('.area td .data');
         let chartDrawArea = document.querySelectorAll('.area td');
         let chartDrawLine = document.querySelectorAll('.line td');
+        let chartDrawAreaBG = document.querySelectorAll('.area td:before');
         let now = new Date(); 
         let nowTime = now.getHours()
         
@@ -123,7 +124,7 @@ async function Update_UI() {
         //normalized and adjusted = (hourlyTemp - adjustedMinTemp) / (adjustedMaxTemp - adjustedMinTemp)
         
 
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 2; i++) {
             let startTemp
             let endTemp
             let normalizedStart
@@ -141,20 +142,36 @@ async function Update_UI() {
                 chartDrawArea[i].style.setProperty('--end', normalizedEnd);
                 chartDrawLine[i].style.setProperty('--start', normalizedStart);
                 chartDrawLine[i].style.setProperty('--end', normalizedEnd);
+                
+                if (startTemp < 0){
+                    chartDrawArea[i].className = 'minus'
+                } else {
+                    chartDrawArea[i].className = ''
+                }
 
             } else {
-                startTemp = hourlyTemp[nowTime + i * 2];
-                endTemp = hourlyTemp[nowTime + (i + 1) * 2];
-
-                normalizedStart = normalizeTemperature(startTemp);
-                normalizedEnd = normalizeTemperature(endTemp);
-                chartDrawArea[i].style.setProperty('--start', normalizedStart);
-                chartDrawArea[i].style.setProperty('--end', normalizedEnd);
-                chartDrawLine[i].style.setProperty('--start', normalizedStart);
-                chartDrawLine[i].style.setProperty('--end', normalizedEnd);
-                // chartTempText[i].innerHTML = hourlyTemp[nowTime] + '°';
-
-                chartTempText[i].innerHTML = startTemp + '°';
+                for (let n = 0; n < 9; n++){
+                    startTemp = hourlyTemp[nowTime + n * 2];
+                    endTemp = hourlyTemp[nowTime + (n + 1) * 2];
+                    console.log(n);
+                    normalizedStart = normalizeTemperature(startTemp);
+                    normalizedEnd = normalizeTemperature(endTemp);
+                    chartDrawArea[n+1].style.setProperty('--start', normalizedStart);
+                    chartDrawArea[n+1].style.setProperty('--end', normalizedEnd);
+                    chartDrawLine[n+1].style.setProperty('--start', normalizedStart);
+                    chartDrawLine[n+1].style.setProperty('--end', normalizedEnd);
+                    // chartTempText[i].innerHTML = hourlyTemp[nowTime] + '°';
+                    
+                    if (endTemp < 0){
+                        chartDrawArea[n+1].className = 'minus'
+                    } else {
+                        chartDrawArea[n+1].className = ''
+                    }
+                    if (n < 8){
+                        chartTempText[n+1].innerHTML = endTemp + '°';
+                    }
+                }
+                
             }
 
 

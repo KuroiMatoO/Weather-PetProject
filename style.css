@@ -71,6 +71,7 @@ position: absolute;
 background: skyblue;
 border-radius: 5px;
 z-index: 99;
+/* display: none; */
 }
 
 #weather_report {
@@ -483,7 +484,16 @@ background: #d6d6d6;
 
 #my-chart .area {
   position: absolute;
-  --color: linear-gradient(rgba(204, 32, 32, 0.466), rgba(255, 208, 0, 0.486), rgba(255, 208, 0, 0.123));
+  --color: linear-gradient(#cc202077, #ffd0007c, #00eeff1f);
+}
+/* handle negative temperaturte */
+#my-chart .area .minus:before{
+  background: linear-gradient(#8cdde71f, #6cbae738, #222d9760);
+}
+
+#my-chart .area{
+  position: absolute;
+  /* background: linear-gradient(rgba(20, 57, 177, 0.466), rgba(255, 208, 0, 0.486), rgba(255, 208, 0, 0.123)); */
 }
 
 #my-chart .line {
