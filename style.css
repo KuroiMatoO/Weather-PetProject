@@ -488,7 +488,7 @@ background: #d6d6d6;
 }
 /* handle negative temperaturte */
 #my-chart .area .minus:before{
-  background: linear-gradient(#8cdde71f, #6cbae738, #222d9760);
+  background: linear-gradient(#65ccda48, #4d9bc941, #222d9760);
 }
 
 #my-chart .area{

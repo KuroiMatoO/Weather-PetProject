@@ -46,7 +46,6 @@ async function Fetch_Location(lat,lng) {
 
 //weather
 async function Fetch_Weather(lat,lng) {
-    
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,relative_humidity_2m,is_day,precipitation,rain,snowfall,cloud_cover,pressure_msl,wind_speed_10m&hourly=temperature_2m&daily=temperature_2m_max,sunshine_duration,temperature_2m_min,precipitation_sum,rain_sum,showers_sum,snowfall_sum&wind_speed_unit=ms&forecast_days=16&timezone=Europe%2FMoscow`;
     const response = await fetch(url);
     if (!response.ok) {
@@ -54,24 +53,53 @@ async function Fetch_Weather(lat,lng) {
     }
     return response.json();
 }
+
+//time zone
+async function Fetch_Time_Zone(lat,lng) {
+    const url = `https://api-bdc.net/data/timezone-by-location?latitude=${lat}&longitude=${lng}&key=bdc_524e2eb17bce449981829ff94720e53c`;
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error('Time Zone API request failed');
+    }
+    return response.json();
+}
+
 let locationData;
 let weatherData;
+let timeZoneData;
+let hours;
+let minutes;
+const today = new Date();
+
 async function Update_UI() {
     try {
         if (lat && lng){
             locationData = await Fetch_Location(lat,lng);
             weatherData = await Fetch_Weather(lat, lng);
+            timeZoneData = await Fetch_Time_Zone(lat, lng)
+            const regex = /T/g
+            let timePosition = timeZoneData.localTime.search(regex)
+            console.log(timePosition)
+            hours = timeZoneData.localTime.slice(timePosition + 1, timePosition + 3)
+            minutes = timeZoneData.localTime.slice(timePosition + 4, timePosition + 6)
         } else {
             locationData = await Fetch_Location();
             weatherData = await Fetch_Weather(locationData.latitude, locationData.longitude);
+            timeZoneData = await Fetch_Time_Zone(locationData.latitude, locationData.longitude)
+            hours = String(today.getHours()).padStart(2, '0');  
+            minutes = String(today.getMinutes()).padStart(2, '0');  
         }
-        const today = new Date();
+
         console.log(locationData);
-        console.log(weatherData)
-        
+        console.log(weatherData);
+        console.log(timeZoneData);       
+
+        console.log("%c today: ", "color:#3cd737")
+        console.log(today)
+        console.log("%c timeZoneData.localTime: ", "color:#3cd737")
+        console.log(timeZoneData.localTime)
         //current
-        const hours = String(today.getHours()).padStart(2, '0');  
-        const minutes = String(today.getMinutes()).padStart(2, '0');  
+        
         const currentClouds = weatherData.current.cloud_cover
         const currentPrecipitation = weatherData.current.precipitation
         const isday = weatherData.current.is_day
@@ -80,8 +108,8 @@ async function Update_UI() {
         let currentIcon = document.querySelector('#icon img')
         currentIcon = Current_Weather_Icon(currentIcon, currentClouds, currentPrecipitation, isday, currentRain, currentSnow)
 
-        document.querySelector('#temperature').innerHTML = Math.round(weatherData.current.temperature_2m) + '°';
-        
+        document.querySelector('#temperature').innerHTML = Math.round(weatherData.hourly.temperature_2m[+hours]) + '°';
+        console.log(+hours)
         document.querySelector('#time').innerHTML = `${hours}:${minutes}`;
         const options = { month: 'long', day: 'numeric', weekday: 'long'};
         document.querySelector('#date').innerHTML = new Intl.DateTimeFormat('en-US', options).format(today);
@@ -96,18 +124,27 @@ async function Update_UI() {
         let chartTempText = document.querySelectorAll('.area td .data');
         let chartDrawArea = document.querySelectorAll('.area td');
         let chartDrawLine = document.querySelectorAll('.line td');
-        let chartDrawAreaBG = document.querySelectorAll('.area td:before');
-        let now = new Date(); 
-        let nowTime = now.getHours()
-        
+        let now;
+        let nowTime;
+        if (lat && lng){
+            nowTime = +hours;
+            console.log("nowTime = " + nowTime)
+        } else {
+            now = new Date(); 
+            nowTime = now.getHours()
+            console.log("nowTime from Data = " + nowTime)
+        } 
+
         let hourlyTemp = weatherData.hourly.temperature_2m
         let hourlyTemp20h = []
         let hourlyTemp20hSumm = 0;
-
+        console.log ("hourlyTemp20h = " + hourlyTemp20h)
         // Collect 20 hours of temperature data starting from 'nowTime'
         for (let i = 0; i < 20; i++){
             hourlyTemp20h.push(hourlyTemp[nowTime + i])
             hourlyTemp20hSumm = Math.round(hourlyTemp20hSumm + hourlyTemp20h[i])
+            console.log("nowTime + i: ")
+            console.log(nowTime + i)
         }
         console.log('hourlyTemp20h: ' + hourlyTemp20h)
         let maxTemp = Math.max(...hourlyTemp20h)
@@ -174,38 +211,26 @@ async function Update_UI() {
                 
             }
 
-
-
-
             console.log('current temp: ' + hourlyTemp[nowTime])
             console.log(`%c start: ${startTemp}`, 'color:#3cd737');
             console.log(`%c end: ${endTemp}`, 'color:#be3016');
 
-            // if (i == 0) {
-            //     chartDrawArea[i].style.setProperty('--start', `calc(${hourlyTemp[nowTime - 2] - adjustedMinTemp}/${adjustedMaxTemp - adjustedMinTemp})`);
-            //     chartDrawArea[i].style.setProperty('--end', `calc(${hourlyTemp[nowTime] - adjustedMinTemp}/${adjustedMaxTemp - adjustedMinTemp})`);
-            //     chartDrawLine[i].style.setProperty('--start', `calc(${hourlyTemp[nowTime - 2] - adjustedMinTemp}/${adjustedMaxTemp - adjustedMinTemp})`);
-            //     chartDrawLine[i].style.setProperty('--end', `calc(${hourlyTemp[nowTime] - adjustedMinTemp}/${adjustedMaxTemp - adjustedMinTemp})`);
-            // }
-            // chartDrawArea[i].style.setProperty('--start', `calc(${hourlyTemp[nowTime] - adjustedMinTemp}/${adjustedMaxTemp - adjustedMinTemp})`);
-            // chartDrawArea[i].style.setProperty('--end', `calc(${hourlyTemp[nowTime + 2] - adjustedMinTemp}/${adjustedMaxTemp - adjustedMinTemp})`);
-            // chartDrawLine[i].style.setProperty('--start', `calc(${hourlyTemp[nowTime] - adjustedMinTemp}/${adjustedMaxTemp - adjustedMinTemp})`);
-            // chartDrawLine[i].style.setProperty('--end', `calc(${hourlyTemp[nowTime + 2] - adjustedMinTemp}/${adjustedMaxTemp - adjustedMinTemp})`);
-            // console.log('Time: ' + nowTime)
-            // console.log('%c start temp:' + hourlyTemp[nowTime], 'color: #bada55')
-            // console.log('%c end temp: ' + hourlyTemp[nowTime + 2], 'color: #ff3131')
-            // console.log(`--start calc(${hourlyTemp[nowTime] - adjustedMinTemp}/${adjustedMaxTemp - adjustedMinTemp}) = ` + (hourlyTemp[nowTime] - adjustedMinTemp)/(adjustedMaxTemp - adjustedMinTemp))
-            // console.log(`--end calc(${hourlyTemp[nowTime + 2] - adjustedMinTemp}/${adjustedMaxTemp - adjustedMinTemp}) = ` + (hourlyTemp[nowTime + 2] - adjustedMinTemp)/(adjustedMaxTemp - adjustedMinTemp))
-            
-            // if (i < 9) {
-            //     chartTempText[i].innerHTML = (hourlyTemp[nowTime]).toFixed(1) + '°'
-            //     nowTime = nowTime + 2;
-            // }
         }
+
         for (let i = 0; i < 9; i++) {
-            let nextHour = new Date(today);
-            nextHour.setHours(today.getHours() + 2 * i);
+            let nextHour;
+            if (lat && lng){
+                nextHour = new Date(timeZoneData.localTime);
+                nextHour.setHours(nextHour.getHours() + 2 * i);
+
+            } else {
+                nextHour = new Date(today);
+                nextHour.setHours(today.getHours() + 2 * i);
+
+            }
+            
             chartTime[i].innerHTML = `${nextHour.getHours()}:00`;
+            console.log(chartTime[i].innerHTML);
         }
 
         //weekly
