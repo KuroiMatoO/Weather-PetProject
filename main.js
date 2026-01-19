@@ -56,7 +56,7 @@ async function Fetch_Weather(lat,lng) {
 
 //time zone
 async function Fetch_Time_Zone(lat,lng) {
-    const url = `https://api-bdc.net/data/timezone-by-location?latitude=${lat}&longitude=${lng}&key=bdc_524e2eb17bce449981829ff94720e53c`;
+    const url = `https://api-bdc.net/data/timezone-by-location?latitude=${lat}&longitude=${lng}&key=bdc_f845d4328375438ba2b3ca0d9f829aeb`;
     const response = await fetch(url);
     if (!response.ok) {
         throw new Error('Time Zone API request failed');
